@@ -5,6 +5,11 @@
 #include "chewyFont.h"
 #include "FreeMonoBoldOblique96pt7b.h"
 #include "FreeSans18pt7b.h"
+#include "icons.h"
+
+//new fonts
+//#include "FreeMonoBoldOblique12pt7b.h"
+//#include "FreeMonoBoldOblique9pt7b.h"
 
 #define monoB &Open_Sans_Hebrew_Condensed_Extra_Bold_72
 #define sansT &Free_Sans_18pt_7b
@@ -72,9 +77,9 @@ bool pressed(){
 const int down = 32;
 #define left 34
 #define right 35
-#define A 26
-#define B 27
-#define select 25
+//#define A 26
+//#define B 27
+//#define select 25
 int upState =0;
 int downState= 0;
 
@@ -83,6 +88,11 @@ Buttons rightBtn(35);
 Buttons upBtn(33);
 Buttons downBtn(32);
 Buttons selectBtn(25);
+Buttons Abtn(26);
+Buttons Bbtn(27);
+
+//
+//bool mySetup, hiScore, about;
 
 TFT_eSPI tft = TFT_eSPI();//constructor initialization
 
@@ -94,6 +104,9 @@ void redraw_cursor(int x, int y);
 void redraw_rect(int x, int y, int w, int h);
 void redraw_Frect(int x, int y, int w, int h);
 void start_game();
+void setupMenu();
+void HiScoreMenu();
+void AboutMenu();
 
 //frame timing
 int interval = 20;
@@ -180,7 +193,36 @@ void loop(){
     tft.fillScreen(TFT_BLACK);
     selection =0;
     break;
+    case 4:
+    tft.fillScreen(TFT_BLACK);
+    selection =5;
+    break;
+
+    case 5:
+    setupMenu();
+    break;
+
+    case 6:
+    tft.fillScreen(TFT_BLACK);
+    selection =7;
+
+    case 7:
+    HiScoreMenu();
+    break;
     
+    case 8:
+    tft.fillScreen(TFT_BLACK);
+    selection =9;
+
+    case 9:
+    AboutMenu();
+    break;
+
+    case 10:
+    tft.fillScreen(TFT_BLACK);
+    selection =0;
+    break;
+
     default:
         break;
     }
@@ -381,6 +423,28 @@ void move_cursor() {
         selection = 2;
 
     }
+    else if(selectBtn.pressed() && curY == 108){
+        Serial.println("Setup Selected!!!");
+        selection = 4;
+      
+
+    }
+     else if(selectBtn.pressed() && curY == 128){
+        Serial.println("Hi-Score Selected!!!");
+        selection = 6;
+      
+
+    }
+     else if(selectBtn.pressed() && curY == 148){
+        Serial.println("About Selected!!!");
+        selection = 8;
+       
+
+    }
+
+
+ 
+
     /*
      //up button
     //if(millis() - lastPress >= duration){
@@ -453,19 +517,19 @@ void move_cursor() {
                     //redraw_cursor(curX, curY);
                     redraw_rect(curX, curY, curW, curH);
                     curY = 108;
-                    Serial.println("down press → moved to 110");
+                    Serial.println("down press → moved to 108");
                 }
                 else if(curY == 108){
                     //redraw_cursor(curX, curY);
                     redraw_rect(curX, curY, curW, curH);
                     curY = 128;
-                    Serial.println("down press → moved to 130");
+                    Serial.println("down press → moved to 128");
                 }
                 else if(curY == 128){
                     //redraw_cursor(curX, curY);
                     redraw_rect(curX, curY, curW, curH);
                     curY = 148;
-                    Serial.println("down press → moved to 150");
+                    Serial.println("down press → moved to 148");
                 }
                 else if(curY == 148){
                     //redraw_cursor(curX, curY);
@@ -534,6 +598,81 @@ void redraw_Frect(int x, int y, int w, int h){
 
     oldX =x;
     oldY = y;
+
+}
+void setupMenu(){
+
+
+tft.drawRoundRect(16, 28, 290, 202, 10, 0xFFFF);
+tft.setTextColor(0x4B1);
+tft.setTextSize(1);
+tft.setFreeFont(&FreeMonoBoldOblique12pt7b);
+tft.drawString(" Button Mapping", 42, 46);
+tft.drawBitmap(93, 167, epd_bitmap_image_play_hover_bits_R, 19, 20, 0xFFFF);
+tft.drawBitmap(45, 168, epd_bitmap_image_play_hover_bits_L , 19, 20, 0xFFFF);
+tft.drawBitmap(72, 147, epd_bitmap_image_play_hover_bits_U , 20, 19, 0xFFFF);
+tft.drawBitmap(69, 190, epd_bitmap_image_play_hover_bits_D, 20, 19, 0xFFFF);
+tft.drawBitmap(256, 160, epd_bitmap_image_off_hover_bits, 19, 20, 0xFFFF);
+tft.drawBitmap(152, 169, epd_bitmap_select_btn_hvr, 16, 18, 0xFFFF);
+tft.drawBitmap(221, 184, epd_bitmap_image_off_hover_bits, 19, 20, 0xFFFF);
+tft.setTextColor(0xF206);
+tft.setFreeFont(&FreeMonoBoldOblique9pt7b);
+tft.drawString("Up", 69, 125);
+tft.drawString("down", 56, 207);
+tft.drawString("L", 30, 168);
+tft.drawString("R", 116, 167);
+tft.drawString("Select", 138, 153);
+tft.drawString("A", 225, 162);
+tft.drawString("B", 260, 141);
+tft.drawBitmap(259, 43, epd_bitmap_menu_settings_gear, 32, 32, 0x4B1);
+tft.drawBitmap(24, 44, epd_bitmap_menu_tools, 28, 32, 0x4B1);
+ if(Bbtn.pushed()){
+        Serial.println("Back to  main menu");
+        selection = 10;
+    //this returns the user to the game menu
+    }
+
+}
+void HiScoreMenu(){
+
+
+tft.drawRoundRect(13, 11, 298, 218, 10, 0x2C3);
+tft.setTextColor(0xF206);
+tft.setTextSize(1);
+tft.setFreeFont(&FreeMonoBoldOblique12pt7b);
+tft.drawString("Hi-Score", 96, 21);
+tft.drawBitmap(256, 19, epd_bitmap_hour_glass_75, 22, 32, 0xF206);
+ if(Bbtn.pushed()){
+        Serial.println("Back to  main menu");
+        selection = 10;
+
+    }
+
+
+}
+void AboutMenu(){
+
+ 
+
+tft.drawRoundRect(20, 20, 289, 210, 10, 0x4B1);
+tft.setTextColor(0xE8EC);
+tft.setTextSize(1);
+tft.setFreeFont(&FreeMonoBoldOblique12pt7b);
+tft.drawString("About", 108, 28);
+tft.setTextColor(0xFFFF);
+tft.setFreeFont(&FreeMonoBoldOblique9pt7b);
+tft.drawString("This is a quick game of", 40, 62);
+tft.drawString("pong. Play against the A.I ", 23, 75);
+tft.drawString("to test your skill. ;)", 24, 94);
+tft.drawBitmap(192, 27, epd_bitmap_file, 24, 32, 0xE8EC);
+
+ if(Bbtn.pushed()){
+        Serial.println("Back to  main menu");
+        selection = 10;
+
+    }
+
+
 
 }
 
